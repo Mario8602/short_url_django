@@ -1,17 +1,45 @@
 from django.db import models
 from django.conf import settings
+
 import random
+import string
+
 
 class Token(models.Model):
     full_url = models.URLField(unique=True)
-    short_url = models.CharField(max_length=20, unique=True, db_index=True)
+    short_url = models.CharField(max_length=6, unique=True, db_index=True)
     number_transitions = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
 
     def __str__(self) -> str:
-        return f'{self.short_url} ---- {self.full_url}'
+        return f"{self.short_url} ({self.full_url[:15]}...)"
     
-    def gen_token(self) -> str:
-        self.short_url = ''.join(random.choices(population=settings.POPULATION, k=settings.TOKEN_LENGTH))
-        return self.short_url
+
+    def save(self, *args, **kwargs):
+        if not self.pk:  # если объект еще не сохранен в базу данных
+            self.short_url = self.gen_token()
+        return super().save(*args, **kwargs)
+
+
+    @staticmethod
+    def gen_token():
+        while True:
+            token = ''.join(random.choices(string.ascii_letters + string.digits, k=6))
+            if not Token.objects.filter(short_url=token).exists():
+                return token
+
+
+
+
+    # def save(self, *args, **kwargs):
+    #     if not self.pk:
+    #         self.short_url = self.gen_token()
+    #     super().save(*args, **kwargs)
+
+    # def gen_token(self):
+    #     str = string.ascii_letters + string.digits
+    #     while True:
+    #         token = ''.join(secrets.choice(str) for i in range(6))
+    #         if not Token.objects.filter(short_url=token).exists():
+    #             return token
