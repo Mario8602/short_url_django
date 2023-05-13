@@ -13,11 +13,11 @@ class Token(models.Model):
     is_active = models.BooleanField(default=True)
 
     def __str__(self) -> str:
-        return f"{self.short_url} ({self.full_url[:15]}...)"
+        return f"{self.short_url} ({self.full_url[:15]})"
     
 
     def save(self, *args, **kwargs):
-        if not self.pk:  # если объект еще не сохранен в базу данных
+        if not self.pk: 
             self.short_url = self.gen_token()
         return super().save(*args, **kwargs)
 
@@ -28,18 +28,3 @@ class Token(models.Model):
             token = ''.join(random.choices(string.ascii_letters + string.digits, k=6))
             if not Token.objects.filter(short_url=token).exists():
                 return token
-
-
-
-
-    # def save(self, *args, **kwargs):
-    #     if not self.pk:
-    #         self.short_url = self.gen_token()
-    #     super().save(*args, **kwargs)
-
-    # def gen_token(self):
-    #     str = string.ascii_letters + string.digits
-    #     while True:
-    #         token = ''.join(secrets.choice(str) for i in range(6))
-    #         if not Token.objects.filter(short_url=token).exists():
-    #             return token
