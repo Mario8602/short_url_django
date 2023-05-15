@@ -7,7 +7,7 @@ import string
 
 class Token(models.Model):
     full_url = models.URLField(unique=True)
-    short_url = models.CharField(max_length=6, unique=True, db_index=True)
+    short_url = models.CharField(max_length=6, unique=True, db_index=True, blank=True)
     number_transitions = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
@@ -17,9 +17,9 @@ class Token(models.Model):
     
 
     def save(self, *args, **kwargs):
-        if not self.pk: 
+        if not self.short_url: 
             self.short_url = self.gen_token()
-        return super().save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
 
     @staticmethod
