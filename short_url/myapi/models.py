@@ -6,7 +6,7 @@ import string
 
 
 class Token(models.Model):
-    full_url = models.URLField(unique=True)
+    full_url = models.URLField(unique=True, max_length=400)
     short_url = models.CharField(max_length=6, unique=True, db_index=True, blank=True)
     number_transitions = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
