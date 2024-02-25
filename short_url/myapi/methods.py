@@ -11,7 +11,7 @@ def get_full_url(url):
             raise KeyError('Token is not active')
     except Token.DoesNotExist:
         raise KeyError('Url does not exist')
-    
+
     token.number_transitions += 1
     token.save()
 

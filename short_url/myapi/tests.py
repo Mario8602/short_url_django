@@ -52,9 +52,3 @@ class TokenModelTests(APITestCase):
         data = {'full_url': full_url}
         response = self.client.post(self.url, data)
         self.assertEqual(response.status_code, 400)
-
-    def test_redirection(self):
-        reponse = 
-
-
-    
